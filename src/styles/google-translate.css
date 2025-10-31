@@ -1,0 +1,126 @@
+/* Google Translate Custom Styles */
+
+/* Hide Google Translate banner at top */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+/* Prevent body from being pushed down */
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+/* Hide the top frame */
+.skiptranslate iframe {
+  display: none !important;
+}
+
+/* Container styling */
+.google-translate-wrapper {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+#google_translate_element {
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* Main gadget container */
+.goog-te-gadget {
+  font-family: inherit !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  vertical-align: middle !important;
+}
+
+/* Hide all text/spans */
+.goog-te-gadget span {
+  display: none !important;
+}
+
+.goog-te-gadget > span {
+  display: none !important;
+}
+
+.goog-te-gadget > div {
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* Style the select dropdown */
+.goog-te-gadget .goog-te-combo {
+  margin: 0 !important;
+  padding: 8px 32px 8px 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 8px !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  color: #166534 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  font-family: inherit !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  min-width: 140px !important;
+  height: 36px !important;
+  line-height: 20px !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23166534' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 12px !important;
+}
+
+.goog-te-gadget .goog-te-combo:hover {
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  background-color: white !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-1px) !important;
+}
+
+.goog-te-gadget .goog-te-combo:focus {
+  outline: none !important;
+  border-color: #16a34a !important;
+  background-color: white !important;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2) !important;
+}
+
+/* Prevent translation of specific elements */
+.notranslate {
+  translate: no !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .goog-te-gadget .goog-te-combo {
+    padding: 6px 24px 6px 10px !important;
+    font-size: 13px !important;
+    min-width: 120px !important;
+    height: 32px !important;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .goog-te-gadget .goog-te-combo {
+    padding: 5px 20px 5px 8px !important;
+    font-size: 12px !important;
+    min-width: 100px !important;
+    height: 30px !important;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .goog-te-gadget .goog-te-combo {
+    background-color: #1f2937 !important;
+    color: #f9fafb !important;
+    border-color: #374151 !important;
+  }
+}

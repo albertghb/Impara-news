@@ -1,0 +1,279 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* News Website Design System - Professional & Clean */
+
+@layer base {
+  :root {
+    /* Core Colors - Neutral Professional Palette */
+    --background: 0 0% 99%;
+    --foreground: 0 0% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 15%;
+
+    /* Primary - Deep charcoal for headers and emphasis */
+    --primary: 0 0% 15%;
+    --primary-foreground: 0 0% 98%;
+
+    /* Secondary - Light gray for subtle backgrounds */
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 20%;
+
+    /* Muted - For less important text and backgrounds */
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 45%;
+
+    /* Accent - Slightly darker gray for highlights */
+    --accent: 0 0% 93%;
+    --accent-foreground: 0 0% 15%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 95%;
+    --ring: 0 0% 15%;
+
+    --radius: 0.75rem;
+
+    /* News-specific design tokens */
+    --news-accent: 220 70% 50%;
+    --news-accent-foreground: 0 0% 98%;
+    --featured-overlay: 0 0% 0%;
+    --author-bg: 0 0% 97%;
+    --trending-bg: 0 0% 98%;
+    --article-shadow: 0 0% 85%;
+
+    /* Typography scale */
+    --headline-size: 2.5rem;
+    --subheadline-size: 1.5rem;
+    --body-size: 1rem;
+    --caption-size: 0.875rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 0 0% 8%;
+    --foreground: 0 0% 95%;
+
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 0 0% 95%;
+    --primary-foreground: 0 0% 8%;
+
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 0 0% 85%;
+
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 0 0% 16%;
+    --accent-foreground: 0 0% 95%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 18%;
+    --input: 0 0% 16%;
+    --ring: 0 0% 95%;
+
+    /* News-specific dark mode tokens */
+    --news-accent: 220 70% 60%;
+    --author-bg: 0 0% 12%;
+    --trending-bg: 0 0% 11%;
+    --article-shadow: 0 0% 5%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-['Inter'] antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  /* News-specific typography classes */
+  .headline-xl {
+    @apply text-4xl font-bold leading-tight tracking-tight;
+  }
+
+  .headline-lg {
+    @apply text-3xl font-semibold leading-tight;
+  }
+
+  .headline-md {
+    @apply text-xl font-semibold leading-snug;
+  }
+
+  .body-text {
+    @apply text-base leading-relaxed;
+  }
+
+  .caption-text {
+    @apply text-sm text-muted-foreground;
+  }
+
+  /* Custom utility classes for news layout */
+  .article-card {
+    @apply bg-card rounded-lg border border-border/40 overflow-hidden transition-all duration-200 hover:shadow-lg hover:border-border;
+  }
+
+  .trending-item {
+    @apply p-4 bg-card rounded-lg border border-border/30 hover:border-border transition-colors;
+  }
+
+  /* Hide scrollbar for horizontal scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Mobile-first responsive utilities */
+  .touch-action-pan-y {
+    touch-action: pan-y;
+  }
+
+  /* Smooth scrolling for mobile */
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent text size adjustment on mobile */
+  body {
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+
+  /* Better tap targets for mobile */
+  button, a, input, select, textarea {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Responsive images */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Modern card with better mobile shadows */
+  .modern-card {
+    @apply bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-300;
+  }
+
+  .modern-card:hover {
+    @apply shadow-xl;
+  }
+
+  /* Card hover effect */
+  .card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .card-hover:hover {
+    @apply transform -translate-y-2;
+  }
+
+  /* Image zoom effect */
+  .image-zoom img {
+    @apply transition-transform duration-500 ease-out;
+  }
+
+  .image-zoom:hover img {
+    @apply scale-110;
+  }
+
+  /* Responsive container */
+  .responsive-container {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+    max-width: 1400px;
+  }
+
+  /* Mobile-optimized grid */
+  .responsive-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6;
+  }
+
+  /* Safe area padding for mobile notches */
+  .safe-area-padding {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 640px) {
+  .headline-xl {
+    @apply text-2xl;
+  }
+
+  .headline-lg {
+    @apply text-xl;
+  }
+
+  .headline-md {
+    @apply text-lg;
+  }
+
+  /* Reduce motion for mobile performance */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .container {
+    @apply px-6;
+  }
+}
+
+/* Desktop optimizations */
+@media (min-width: 1025px) {
+  .container {
+    @apply px-8;
+  }
+}
