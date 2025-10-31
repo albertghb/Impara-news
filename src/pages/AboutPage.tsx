@@ -5,6 +5,7 @@ import { BusinessAdBanner } from "@/components/AdBanner";
 import { Badge } from "@/components/ui/badge";
 import { Users, Target, Award, Globe } from "lucide-react";
 import authorSarah from "@/assets/author-sarah.jpg";
+import NewsSidebar from "@/components/NewsSidebar";
 
 const AboutPage = () => {
   return (
@@ -153,6 +154,8 @@ const AboutPage = () => {
 
             {/* Sidebar */}
             <aside className="space-y-6">
+              <NewsSidebar />
+              
               <BusinessAdBanner />
               
               <div className="article-card p-6">

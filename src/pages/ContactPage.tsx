@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import NewsSidebar from "@/components/NewsSidebar";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -167,6 +168,8 @@ const ContactPage = () => {
 
             {/* Sidebar */}
             <aside className="space-y-6">
+              <NewsSidebar />
+              
               {/* Contact Info */}
               <Card>
                 <CardContent className="p-6">

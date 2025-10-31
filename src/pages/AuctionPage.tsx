@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 import { 
   Gavel, 
   Clock, 
@@ -14,7 +15,8 @@ import {
   Calendar,
   MapPin,
   Award,
-  Zap
+  Zap,
+  Newspaper
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,12 +39,24 @@ interface AuctionItem {
   featured?: boolean;
 }
 
+interface Article {
+  id: number;
+  title: string;
+  excerpt: string;
+  imageUrl: string;
+  category: { name: string; nameRw: string };
+  publishedAt: string;
+  views: number;
+  readTime: string;
+}
+
 const AuctionPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("ending-soon");
   const [showFilters, setShowFilters] = useState(false);
   const [auctionItems, setAuctionItems] = useState<AuctionItem[]>([]);
+  const [newsArticles, setNewsArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch auctions from database
@@ -103,6 +117,45 @@ const AuctionPage = () => {
 
     fetchAuctions();
   }, []);
+
+  // Fetch news articles from database
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await fetch('http://localhost:4000/api/articles/latest?limit=10');
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          setNewsArticles(data.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch news articles:', error);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  // Helper function to get proper image URL
+  const getImageUrl = (imageUrl?: string, fallback: string = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=300&fit=crop') => {
+    if (!imageUrl || imageUrl.trim() === '') {
+      return fallback;
+    }
+    if (imageUrl.startsWith('/uploads/')) {
+      return `http://localhost:4000${imageUrl}`;
+    }
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    return `http://localhost:4000${imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl}`;
+  };
+
+  const formatViews = (views: number) => {
+    if (views >= 1000) {
+      return `${(views / 1000).toFixed(1)}k`;
+    }
+    return views.toString();
+  };
 
   const categories = [
     { id: "all", name: "All Categories", icon: <Gavel className="w-4 h-4" /> },
@@ -235,8 +288,11 @@ const AuctionPage = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-12">
-        {/* Categories & Filters */}
-        <div className="mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Main Auction Content */}
+          <div className="lg:col-span-3">
+            {/* Categories & Filters */}
+            <div className="mb-8">
           <div className="flex flex-wrap gap-3 mb-6">
             {categories.map((category) => (
               <button
@@ -273,10 +329,10 @@ const AuctionPage = () => {
             <div className="text-gray-600">
               Showing <span className="font-semibold">{auctionItems.length}</span> auctions
             </div>
-          </div>
-        </div>
+            </div>
+            </div>
 
-        {/* Featured Auctions */}
+            {/* Featured Auctions */}
         <div className="mb-12">
           <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
             <Zap className="w-8 h-8 text-yellow-500" />
@@ -367,8 +423,8 @@ const AuctionPage = () => {
           )}
         </div>
 
-        {/* All Auctions */}
-        <div>
+            {/* All Auctions */}
+            <div>
           <h2 className="text-3xl font-bold mb-6">All Auctions</h2>
           {auctionItems.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-xl shadow">
@@ -437,8 +493,74 @@ const AuctionPage = () => {
                 </div>
               </motion.div>
             ))}
+              </div>
+            )}
             </div>
-          )}
+          </div>
+
+          {/* News Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-4">
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div className="bg-gradient-to-r from-purple-600 to-purple-500 text-white px-4 py-3">
+                  <h2 className="text-lg font-bold flex items-center gap-2">
+                    <Newspaper className="w-5 h-5" />
+                    Latest News
+                  </h2>
+                </div>
+                <div className="p-4 space-y-4 max-h-[800px] overflow-y-auto">
+                  {newsArticles.length > 0 ? (
+                    newsArticles.map((article) => (
+                      <Link
+                        key={article.id}
+                        to={`/news/${article.id}`}
+                        className="block group hover:bg-gray-50 p-3 rounded-lg transition-colors"
+                      >
+                        <div className="flex gap-3">
+                          <img
+                            src={getImageUrl(article.imageUrl)}
+                            alt={article.title}
+                            className="w-20 h-20 object-cover rounded-lg flex-shrink-0"
+                            onError={(e) => {
+                              e.currentTarget.src = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=200';
+                            }}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-bold text-sm line-clamp-2 group-hover:text-purple-600 transition-colors mb-1">
+                              {article.title}
+                            </h3>
+                            <div className="flex items-center gap-2 text-xs text-gray-500">
+                              <span className="flex items-center gap-1">
+                                <Eye className="w-3 h-3" />
+                                {formatViews(article.views)}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Clock className="w-3 h-3" />
+                                {article.readTime || '5 min'}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <Newspaper className="w-12 h-12 mx-auto mb-2 text-gray-300" />
+                      <p className="text-sm">No news articles available</p>
+                    </div>
+                  )}
+                </div>
+                <div className="border-t p-4">
+                  <Link
+                    to="/all-news"
+                    className="block text-center text-purple-600 hover:text-purple-700 font-semibold text-sm"
+                  >
+                    View All News →
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

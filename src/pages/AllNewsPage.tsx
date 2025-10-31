@@ -1,27 +1,94 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Calendar, Eye, User, Clock, TrendingUp, Filter, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import NewsSidebar from "@/components/NewsSidebar";
 
 interface NewsArticle {
-  id: string;
+  id: number;
   title: string;
   excerpt: string;
-  category: string;
-  image: string;
-  author: string;
-  date: string;
-  views: string;
+  category: {
+    id: number;
+    name: string;
+    nameRw: string;
+    slug: string;
+  };
+  imageUrl: string;
+  author: {
+    id: number;
+    name: string;
+  };
+  publishedAt: string;
+  views: number;
   readTime: string;
 }
 
 const AllNewsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [allNews, setAllNews] = useState<NewsArticle[]>([]);
+  const [categories, setCategories] = useState<string[]>(["all"]);
+  const [loading, setLoading] = useState(true);
 
-  // Sample news articles
-  const allNews: NewsArticle[] = [
+  // Fetch news from database
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:4000/api/articles?status=published&limit=100');
+        const data = await response.json();
+        
+        if (data.articles) {
+          setAllNews(data.articles);
+          
+          // Extract unique categories
+          const uniqueCategories = ['all', ...new Set(data.articles.map((article: NewsArticle) => article.category.nameRw || article.category.name))];
+          setCategories(uniqueCategories);
+        }
+      } catch (error) {
+        console.error('Failed to fetch news:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  // Helper function to get proper image URL
+  const getImageUrl = (imageUrl?: string, fallback: string = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&h=400&fit=crop') => {
+    if (!imageUrl || imageUrl.trim() === '') {
+      return fallback;
+    }
+    if (imageUrl.startsWith('/uploads/')) {
+      return `http://localhost:4000${imageUrl}`;
+    }
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    return `http://localhost:4000${imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl}`;
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('rw-RW', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
+
+  const formatViews = (views: number) => {
+    if (views >= 1000) {
+      return `${(views / 1000).toFixed(1)}k`;
+    }
+    return views.toString();
+  };
+
+  // Old fake news removed
+  const oldFakeNews: NewsArticle[] = [
     {
       id: "1",
       title: "Akarere ka Bugesera habereye inama mpuzamahanga y'iha kumashyamba",
@@ -156,23 +223,24 @@ const AllNewsPage = () => {
     }
   ];
 
-  const categories = [
-    "all",
-    "Politiki",
-    "Ubukungu",
-    "Siporo",
-    "Ubuzima",
-    "Uburezi",
-    "Imyidagaduro",
-    "Ikoranabuhanga"
-  ];
-
   const filteredNews = allNews.filter((article) => {
     const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         article.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || article.category === selectedCategory;
+                         (article.excerpt && article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()));
+    const categoryName = article.category.nameRw || article.category.name;
+    const matchesCategory = selectedCategory === "all" || categoryName === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Tegereza...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -201,6 +269,7 @@ const AllNewsPage = () => {
                   className="pl-12 pr-4 py-6 text-lg rounded-full border-2 border-white/20 bg-white/10 text-white placeholder:text-white/60 focus:bg-white focus:text-gray-900 transition-all"
                 />
               </div>
+              <p className="text-sm text-white/80 mt-4">Inkuru {allNews.length} zose zituruka kuri sisitemu</p>
             </div>
           </motion.div>
         </div>
@@ -208,6 +277,9 @@ const AllNewsPage = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Main Content Area */}
+          <div className="lg:col-span-3">
         {/* Categories Filter */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
@@ -249,13 +321,16 @@ const AllNewsPage = () => {
               <Link to={`/news/${article.id}`}>
                 <div className="image-zoom relative">
                   <img
-                    src={article.image}
+                    src={getImageUrl(article.imageUrl)}
                     alt={article.title}
                     className="w-full h-48 object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&h=400&fit=crop';
+                    }}
                   />
                   <div className="absolute top-3 left-3">
                     <span className="badge badge-primary">
-                      {article.category}
+                      {article.category.nameRw || article.category.name}
                     </span>
                   </div>
                 </div>
@@ -265,28 +340,28 @@ const AllNewsPage = () => {
                     {article.title}
                   </h3>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                    {article.excerpt}
+                    {article.excerpt || 'Soma byinshi...'}
                   </p>
 
                   <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
                     <div className="flex items-center gap-1">
                       <User className="w-3 h-3" />
-                      <span>{article.author}</span>
+                      <span>{article.author?.name || 'Admin'}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
-                      <span>{article.readTime}</span>
+                      <span>{article.readTime || '5 min'}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between text-xs text-gray-500">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
-                      <span>{article.date}</span>
+                      <span>{formatDate(article.publishedAt)}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Eye className="w-3 h-3" />
-                      <span>{article.views}</span>
+                      <span>{formatViews(article.views)}</span>
                     </div>
                   </div>
                 </div>
@@ -295,12 +370,21 @@ const AllNewsPage = () => {
           ))}
         </div>
 
-        {/* No Results */}
-        {filteredNews.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">Nta makuru yabonetse</p>
+            {/* No Results */}
+            {filteredNews.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-gray-500 text-lg">Nta makuru yabonetse</p>
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Sidebar */}
+          <aside className="lg:col-span-1">
+            <div className="sticky top-4">
+              <NewsSidebar />
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   );

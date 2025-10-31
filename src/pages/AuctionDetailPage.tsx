@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import NewsSidebar from "@/components/NewsSidebar";
 
 const AuctionDetailPage = () => {
   const { id } = useParams();
@@ -336,6 +337,11 @@ const AuctionDetailPage = () => {
                 </div>
               </div>
             </motion.div>
+
+            {/* Latest News & Ads Sidebar */}
+            <div className="mt-6">
+              <NewsSidebar />
+            </div>
           </aside>
         </div>
       </div>

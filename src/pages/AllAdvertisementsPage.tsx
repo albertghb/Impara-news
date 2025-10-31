@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import NewsSidebar from "@/components/NewsSidebar";
 
 interface Advertisement {
   id: string;
@@ -245,6 +246,9 @@ const AllAdvertisementsPage = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Main Content Area */}
+          <div className="lg:col-span-3">
         {/* Categories Filter */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
@@ -417,13 +421,22 @@ const AllAdvertisementsPage = () => {
           </div>
         </div>
 
-        {/* No Results */}
-        {filteredAds.length === 0 && (
-          <div className="text-center py-12">
-            <Megaphone className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-            <p className="text-gray-500 text-lg">Nta matangazo yabonetse</p>
+            {/* No Results */}
+            {filteredAds.length === 0 && (
+              <div className="text-center py-12">
+                <Megaphone className="w-16 h-16 mx-auto text-gray-300 mb-4" />
+                <p className="text-gray-500 text-lg">Nta matangazo yabonetse</p>
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Sidebar */}
+          <aside className="lg:col-span-1">
+            <div className="sticky top-4">
+              <NewsSidebar />
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   );

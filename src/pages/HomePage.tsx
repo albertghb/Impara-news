@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Clock, User, Eye, TrendingUp, Calendar } from "lucide-react";
+import { Clock, User, Eye, TrendingUp, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import RotatingAuctionBox from "@/components/RotatingAuctionBox";
 
 interface Article {
@@ -147,6 +147,24 @@ const HomePage = () => {
     return views.toString();
   };
 
+  // Navigation functions for breaking news
+  const nextBreakingNews = () => {
+    setCurrentBreakingIndex((prev) => (prev + 1) % breakingNews.length);
+  };
+
+  const prevBreakingNews = () => {
+    setCurrentBreakingIndex((prev) => (prev - 1 + breakingNews.length) % breakingNews.length);
+  };
+
+  // Navigation functions for advertisements
+  const nextAdvertisement = () => {
+    setCurrentAdIndex((prev) => (prev + 1) % advertisements.length);
+  };
+
+  const prevAdvertisement = () => {
+    setCurrentAdIndex((prev) => (prev - 1 + advertisements.length) % advertisements.length);
+  };
+
   // Helper function to get proper image URL
   const getImageUrl = (imageUrl?: string, fallback: string = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&h=500&fit=crop') => {
     if (!imageUrl || imageUrl.trim() === '') {
@@ -201,7 +219,32 @@ const HomePage = () => {
                   ))}
                 </div>
               </div>
-              <div className="bg-white rounded-b-xl shadow-lg overflow-hidden">
+              <div className="bg-white rounded-b-xl shadow-lg overflow-hidden relative">
+                {/* Navigation Arrows for Breaking News */}
+                {breakingNews.length > 1 && (
+                  <>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        prevBreakingNews();
+                      }}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white text-green-600 rounded-full p-2 shadow-lg transition-all hover:scale-110"
+                      aria-label="Previous breaking news"
+                    >
+                      <ChevronLeft className="w-6 h-6" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        nextBreakingNews();
+                      }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white text-green-600 rounded-full p-2 shadow-lg transition-all hover:scale-110"
+                      aria-label="Next breaking news"
+                    >
+                      <ChevronRight className="w-6 h-6" />
+                    </button>
+                  </>
+                )}
                 <Link to={`/news/${breakingNews[currentBreakingIndex].id}`} className="block group">
                   <motion.div
                     key={currentBreakingIndex}
@@ -280,7 +323,32 @@ const HomePage = () => {
                 </div>
               )}
             </div>
-            <div className="bg-white rounded-b-xl shadow-lg overflow-hidden">
+            <div className="bg-white rounded-b-xl shadow-lg overflow-hidden relative">
+              {/* Navigation Arrows for Advertisements */}
+              {advertisements.length > 1 && (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      prevAdvertisement();
+                    }}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white text-blue-600 rounded-full p-2 shadow-lg transition-all hover:scale-110"
+                    aria-label="Previous advertisement"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      nextAdvertisement();
+                    }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white text-blue-600 rounded-full p-2 shadow-lg transition-all hover:scale-110"
+                    aria-label="Next advertisement"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </>
+              )}
               {advertisements.length > 0 && advertisements[currentAdIndex] ? (
                 <Link
                   to={`/advertisement/${advertisements[currentAdIndex].id}`}

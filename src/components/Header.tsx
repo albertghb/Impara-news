@@ -278,13 +278,53 @@ const Header = () => {
             {/* Hide Sign In button on admin pages */}
             {!isAdminPage && (
               <Link to="/admin/login">
-                <Button 
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white text-green-600 border-0 hover:bg-green-50 transition-all duration-300 shadow-md hover:shadow-lg font-semibold"
-                  size="sm"
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="relative group"
                 >
-                  <User className="h-4 w-4 mr-2" />
-                  Sign In
-                </Button>
+                  <Button 
+                    className="relative w-10 h-10 p-0 rounded-full bg-white text-green-600 border-2 border-white hover:bg-green-50 transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden"
+                    size="icon"
+                  >
+                    {/* Animated background gradient */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-br from-green-400 to-green-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+                    />
+                    
+                    {/* User icon with animation */}
+                    <motion.div
+                      whileHover={{ y: -2 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                      <User className="h-5 w-5 relative z-10" />
+                    </motion.div>
+                    
+                    {/* Pulse ring effect */}
+                    <motion.div
+                      className="absolute inset-0 rounded-full border-2 border-green-400"
+                      animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.5, 0, 0.5],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  </Button>
+                  
+                  {/* Tooltip on hover */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                    whileHover={{ opacity: 1, y: 0, scale: 1 }}
+                    className="absolute -bottom-10 left-1/2 -translate-x-1/2 px-3 py-1 bg-gray-900 text-white text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50"
+                  >
+                    Sign In
+                    <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45" />
+                  </motion.div>
+                </motion.div>
               </Link>
             )}
 
@@ -461,13 +501,30 @@ const Header = () => {
                   transition={{ delay: 0.4 }}
                 >
                   <Link to="/admin/login" className="w-full block">
-                    <Button 
-                      className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white border-0 shadow-md hover:shadow-lg font-semibold transition-all duration-300"
-                      size="sm"
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <User className="h-4 w-4 mr-2" />
-                      Sign In
-                    </Button>
+                      <Button 
+                        className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white border-0 shadow-md hover:shadow-lg font-semibold transition-all duration-300 relative overflow-hidden group"
+                        size="sm"
+                      >
+                        {/* Animated shine effect */}
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                          animate={{
+                            x: ['-100%', '100%'],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "linear"
+                          }}
+                        />
+                        <User className="h-4 w-4 mr-2 relative z-10" />
+                        <span className="relative z-10">Sign In</span>
+                      </Button>
+                    </motion.div>
                   </Link>
                 </motion.div>
               )}

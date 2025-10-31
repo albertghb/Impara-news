@@ -15,6 +15,7 @@ import {
   Bookmark
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import NewsSidebar from "@/components/NewsSidebar";
 
 const AdvertisementDetailPage = () => {
   const { id } = useParams();
@@ -422,6 +423,11 @@ const AdvertisementDetailPage = () => {
                 </Button>
               </div>
             </motion.div>
+
+            {/* Latest News & Ads Sidebar */}
+            <div className="mt-6">
+              <NewsSidebar />
+            </div>
           </aside>
         </div>
       </div>
